@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Studio João Vitor BarberShop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"/>
+  <style>
+    :root {
+      --black:   #0A0A0A;
+      --white:   #F5F5F5;
+      --blue:    #1A3A6B;
+      --red:     #C8102E;
+      --gray:    #1E1E1E;
+      --gray2:   #2A2A2A;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,16,46,0.25);
+      transition: all .3s;
+    }
+    nav.scrolled { padding: .8rem 3rem; background: rgba(10,10,10,0.97); }
+    .nav-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display:flex; gap:2.2rem; list-style:none; }
+    .nav-links a {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(245,245,245,.65);
+      text-decoration: none;
+      position: relative;
+      transition: color .25s;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px;
+      background: var(--red); transition: width .3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width:100%; }
+    .nav-cta {
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:.72rem;
+      letter-spacing:.2em; text-transform:uppercase;
+      padding:.6rem 1.4rem;
+      background: var(--red); color: var(--white); border:none; cursor:pointer;
+      text-decoration:none; transition: background .25s;
+    }
+    .nav-cta:hover { background: #a50d25; }
+
+    /* ── HERO ── */
+    #hero {
+      position:relative; min-height:100vh; display:flex; align-items:center;
+      background: var(--black); overflow:hidden;
+    }
+    .hero-bg-lines {
+      position:absolute; inset:0; pointer-events:none;
+    }
+    .hero-bg-lines::before {
+      content:'';
+      position:absolute; top:0; right:0;
+      width:55%; height:100%;
+      background: linear-gradient(135deg, transparent 0%, var(--blue) 0%, var(--blue) 3px, transparent 3px) 0 0 / 60px 60px,
+                  var(--gray);
+      opacity:.07;
+    }
+    /* Vertical red accent bar */
+    .hero-accent-bar {
+      position:absolute; left:0; top:0; bottom:0; width:5px;
+      background: var(--red);
+    }
+    /* Big diagonal watermark */
+    .hero-watermark {
+      position:absolute; right:-6rem; top:50%; transform:translateY(-50%) rotate(-8deg);
+      font-family:'Montserrat',sans-serif; font-weight:900;
+      font-size:22vw; line-height:1;
+      color: rgba(26,58,107,.08);
+      user-select:none; pointer-events:none; letter-spacing:-.02em;
+      white-space:nowrap;
+    }
+    .hero-content { position:relative; z-index:2; padding: 9rem 3rem 4rem 5rem; max-width:900px; }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:.8rem;
+      font-family:'Montserrat',sans-serif; font-size:.7rem; font-weight:700;
+      letter-spacing:.3em; text-transform:uppercase; color: var(--red);
+      margin-bottom:1.5rem;
+    }
+    .hero-eyebrow::before { content:''; display:block; width:2.5rem; height:2px; background:var(--red); }
+
+    /* Blade cut animation */
+    .blade-wrap { position:relative; display:inline-block; }
+    .blade-cut {
+      position:absolute; top:50%; left:-5%; right:-2%;
+      height:3px; background: var(--red);
+      transform:translateX(-102%);
+      animation: blade-slash 1.2s cubic-bezier(.77,0,.18,1) 1.4s forwards;
+    }
+    @keyframes blade-slash { to { transform: translateX(105%); } }
+
+    .hero-title {
+      font-family:'Montserrat',sans-serif; font-weight:900;
+      font-size: clamp(3rem, 7vw, 6.5rem); line-height:.94;
+      text-transform:uppercase; letter-spacing:-.02em;
+      color: var(--white);
+      opacity:0; animation: fadeUp .8s ease .3s forwards;
+    }
+    .hero-title .highlight { color: var(--red); }
+    .hero-title .blue-word { color: var(--blue); -webkit-text-stroke: 1px var(--blue); color:transparent; }
+    .hero-sub {
+      margin-top:1.8rem; font-size:1rem; font-weight:300; line-height:1.7;
+      color:rgba(245,245,245,.55); max-width:460px;
+      opacity:0; animation: fadeUp .8s ease .6s forwards;
+    }
+    .hero-actions {
+      margin-top:2.5rem; display:flex; gap:1.2rem; align-items:center;
+      opacity:0; animation: fadeUp .8s ease .9s forwards;
+    }
+    .btn-primary {
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:.78rem;
+      letter-spacing:.18em; text-transform:uppercase;
+      padding:.85rem 2rem; background:var(--red); color:var(--white);
+      border:none; cursor:pointer; text-decoration:none; display:inline-block;
+      transition: all .25s;
+    }
+    .btn-primary:hover { background:#a50d25; transform:translateY(-2px); }
+    .btn-outline {
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:.78rem;
+      letter-spacing:.18em; text-transform:uppercase;
+      padding:.85rem 2rem; background:transparent; color:var(--white);
+      border:2px solid rgba(245,245,245,.25); cursor:pointer; text-decoration:none;
+      display:inline-block; transition: all .25s;
+    }
+    .btn-outline:hover { border-color:var(--white); }
+
+    .hero-stats {
+      position:absolute; bottom:3rem; right:5rem; z-index:2;
+      display:flex; gap:3rem;
+      opacity:0; animation: fadeUp .8s ease 1.2s forwards;
+    }
+    .stat-item { text-align:right; }
+    .stat-num {
+      font-family:'Montserrat',sans-serif; font-weight:900; font-size:2.8rem;
+      line-height:1; color:var(--white); letter-spacing:-.02em;
+    }
+    .stat-num span { color:var(--red); font-size:1.8rem; }
+    .stat-label {
+      font-size:.65rem; letter-spacing:.2em; text-transform:uppercase;
+      color:rgba(245,245,245,.4); margin-top:.3rem;
+    }
+    /* Vertical divider between stats */
+    .stat-item:not(:last-child) { border-right:1px solid rgba(245,245,245,.12); padding-right:3rem; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── MARQUEE ── */
+    .marquee-strip {
+      background: var(--red); padding:.7rem 0; overflow:hidden;
+      border-top:1px solid rgba(255,255,255,.15); border-bottom:1px solid rgba(255,255,255,.15);
+    }
+    .marquee-inner {
+      display:flex; gap:0; white-space:nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    .marquee-item {
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:.7rem;
+      letter-spacing:.25em; text-transform:uppercase; color:var(--white);
+      padding:0 2.5rem;
+    }
+    .marquee-dot { color:rgba(255,255,255,.4); }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ── SECTIONS GENERAL ── */
+    section { padding:6rem 3rem; }
+    .section-label {
+      font-family:'Montserrat',sans-serif; font-size:.65rem; font-weight:700;
+      letter-spacing:.35em; text-transform:uppercase; color:var(--red);
+      margin-bottom:1rem; display:flex; align-items:center; gap:.8rem;
+    }
+    .section-label::before { content:''; display:block; width:1.8rem; height:2px; background:var(--red); }
+    .section-title {
+      font-family:'Montserrat',sans-serif; font-weight:900;
+      font-size:clamp(2rem,4vw,3.5rem); line-height:1; text-transform:uppercase;
+      letter-spacing:-.02em; color:var(--white);
+    }
+
+    /* ── SERVIÇOS ── */
+    #servicos { background:var(--gray); }
+    .services-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:1px; margin-top:3.5rem;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .service-card {
+      background:var(--gray2); padding:2.4rem 2rem;
+      border:1px solid rgba(255,255,255,.06);
+      position:relative; overflow:hidden;
+      transition: background .3s;
+      cursor:default;
+    }
+    .service-card::after {
+      content:''; position:absolute; bottom:0; left:0; width:0; height:3px;
+      background:var(--red); transition:width .4s;
+    }
+    .service-card:hover { background:#333; }
+    .service-card:hover::after { width:100%; }
+    .service-icon {
+      font-size:2rem; margin-bottom:1.2rem; display:block;
+      filter: grayscale(1) brightness(2);
+    }
+    .service-name {
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:1rem;
+      letter-spacing:.06em; text-transform:uppercase; color:var(--white);
+      margin-bottom:.5rem;
+    }
+    .service-desc { font-size:.82rem; color:rgba(245,245,245,.45); line-height:1.6; }
+    .service-price {
+      margin-top:1.4rem; font-family:'Montserrat',sans-serif; font-weight:900;
+      font-size:1.5rem; color:var(--red);
+    }
+    .service-price small { font-size:.75rem; font-weight:400; color:rgba(245,245,245,.4); }
+
+    /* ── GALERIA ── */
+    #galeria { background:var(--black); }
+    .gallery-carousel { margin-top:3rem; }
+    .gallery-item {
+      margin:0 .5rem; overflow:hidden; position:relative;
+      aspect-ratio: 3/4; background:var(--gray2);
+    }
+    .gallery-img {
+      width:100%; height:100%; object-fit:cover;
+      filter:grayscale(30%);
+      transition:transform .5s, filter .5s;
+    }
+    .gallery-item:hover .gallery-img { transform:scale(1.06); filter:grayscale(0%); }
+    .gallery-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(10,10,10,.8) 0%, transparent 60%);
+      opacity:0; transition:opacity .4s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity:1; }
+
+    /* OWL custom */
+    .owl-theme .owl-dots .owl-dot span {
+      background:rgba(245,245,245,.2); width:30px; height:3px; border-radius:0;
+    }
+    .owl-theme .owl-dots .owl-dot.active span { background:var(--red); }
+    .owl-theme .owl-nav [class*=owl-] {
+      background:rgba(200,16,46,.8) !important; border-radius:0 !important;
+      width:48px; height:48px; line-height:48px; font-size:1.4rem !important;
+      color:var(--white) !important;
+    }
+    .owl-theme .owl-nav [class*=owl-]:hover { background:var(--red) !important; }
+
+    /* ── EQUIPE ── */
+    #equipe { background:var(--gray); }
+    .team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; margin-top:3.5rem; }
+    .team-card { position:relative; overflow:hidden; }
+    .team-photo-wrap { aspect-ratio:3/4; overflow:hidden; background:var(--gray2); }
+    .team-photo { width:100%; height:100%; object-fit:cover; filter:grayscale(50%); transition:transform .5s, filter .5s; }
+    .team-card:hover .team-photo { transform:scale(1.05); filter:grayscale(0%); }
+    .team-info { padding:1.4rem 1.2rem; background:var(--gray2); }
+    .team-name {
+      font-family:'Montserrat',sans-serif; font-weight:900; font-size:1.1rem;
+      text-transform:uppercase; letter-spacing:.05em; color:var(--white);
+    }
+    .team-role { font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin-top:.3rem; }
+    .team-divider { width:2rem; height:2px; background:var(--red); margin:1rem 0; }
+    .team-bio { font-size:.82rem; color:rgba(245,245,245,.5); line-height:1.6; }
+
+    /* ── CHARTS ── */
+    #resultados { background:var(--black); }
+    .charts-wrap {
+      display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:3.5rem;
+    }
+    .chart-card {
+      background:var(--gray2); padding:2rem;
+      border:1px solid rgba(255,255,255,.07);
+    }
+    .chart-card-title {
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:.75rem;
+      letter-spacing:.2em; text-transform:uppercase; color:rgba(245,245,245,.5);
+      margin-bottom:1.5rem;
+    }
+    canvas { max-height:260px; }
+
+    /* ── DEPOIMENTOS ── */
+    #depoimentos { background:var(--gray); }
+    .testimonials-carousel { margin-top:3rem; }
+    .testimonial-card {
+      background:var(--gray2); padding:2.5rem 2rem; margin:0 .75rem;
+      border-left:3px solid var(--red);
+      position:relative;
+    }
+    .testimonial-card::before {
+      content:'"'; position:absolute; top:.5rem; right:1.5rem;
+      font-family:'Montserrat',sans-serif; font-size:6rem; font-weight:900;
+      color:rgba(200,16,46,.12); line-height:1;
+    }
+    .testimonial-text { font-size:.92rem; color:rgba(245,245,245,.7); line-height:1.75; font-style:italic; }
+    .testimonial-author { margin-top:1.5rem; display:flex; align-items:center; gap:1rem; }
+    .author-avatar {
+      width:44px; height:44px; background:var(--blue);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Montserrat',sans-serif; font-weight:900; font-size:1rem; color:var(--white);
+      flex-shrink:0;
+    }
+    .author-name { font-family:'Montserrat',sans-serif; font-weight:700; font-size:.85rem; color:var(--white); }
+    .author-stars { color:var(--red); font-size:.8rem; margin-top:.2rem; }
+
+    /* ── AGENDAMENTO ── */
+    #agendamento { background:var(--blue); position:relative; overflow:hidden; }
+    #agendamento::before {
+      content:''; position:absolute; inset:0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent, transparent 40px,
+        rgba(255,255,255,.03) 40px, rgba(255,255,255,.03) 41px
+      );
+    }
+    .booking-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; position:relative; z-index:1; }
+    .booking-left .section-label::before { background:rgba(255,255,255,.5); }
+    .booking-left .section-label { color:rgba(255,255,255,.7); }
+    .booking-sub { font-size:.95rem; color:rgba(255,255,255,.7); line-height:1.7; margin-top:1.2rem; }
+    .booking-info { margin-top:2.5rem; display:flex; flex-direction:column; gap:1rem; }
+    .info-row { display:flex; align-items:center; gap:1rem; font-size:.88rem; color:rgba(255,255,255,.75); }
+    .info-icon { font-size:1.1rem; flex-shrink:0; }
+    .booking-form { display:flex; flex-direction:column; gap:1rem; }
+    .form-group { display:flex; flex-direction:column; gap:.4rem; }
+    .form-label {
+      font-family:'Montserrat',sans-serif; font-size:.65rem; font-weight:700;
+      letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.6);
+    }
+    .form-input {
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+      padding:.75rem 1rem; color:var(--white); font-size:.9rem;
+      font-family:'Inter',sans-serif; outline:none;
+      transition:border-color .25s;
+    }
+    .form-input::placeholder { color:rgba(255,255,255,.3); }
+    .form-input:focus { border-color:rgba(255,255,255,.6); }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .btn-booking {
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:.78rem;
+      letter-spacing:.18em; text-transform:uppercase;
+      padding:.9rem; background:var(--red); color:var(--white);
+      border:none; cursor:pointer; margin-top:.5rem;
+      transition: background .25s, transform .25s;
+    }
+    .btn-booking:hover { background:#a50d25; transform:translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background:#050505; padding:3rem;
+      border-top:1px solid rgba(200,16,46,.3);
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:1.5rem;
+    }
+    .footer-logo { font-family:'Montserrat',sans-serif; font-weight:900; font-size:1rem; letter-spacing:.15em; text-transform:uppercase; }
+    .footer-logo span { color:var(--red); }
+    .footer-copy { font-size:.75rem; color:rgba(245,245,245,.3); letter-spacing:.1em; }
+    .footer-social { display:flex; gap:1rem; }
+    .social-link {
+      width:36px; height:36px; background:var(--gray2);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.95rem; text-decoration:none; color:rgba(245,245,245,.5);
+      transition:background .25s, color .25s;
+    }
+    .social-link:hover { background:var(--red); color:var(--white); }
+
+    /* Scroll reveal */
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* Mobile menu toggle */
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+    .hamburger span { display:block; width:24px; height:2px; background:var(--white); transition:all .3s; }
+
+    @media(max-width:900px) {
+      nav { padding:1rem 1.5rem; }
+      .nav-links, .nav-cta { display:none; }
+      .hamburger { display:flex; }
+      .hero-content { padding:8rem 1.5rem 4rem; }
+      .hero-stats { right:1.5rem; gap:1.5rem; }
+      .stat-item:not(:last-child) { padding-right:1.5rem; }
+      section { padding:4rem 1.5rem; }
+      .charts-wrap { grid-template-columns:1fr; }
+      .booking-grid { grid-template-columns:1fr; gap:2.5rem; }
+      .form-grid { grid-template-columns:1fr; }
+      footer { flex-direction:column; text-align:center; align-items:center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">Studio <span>JV</span> BarberShop</div>
+  <ul class="nav-links">
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#galeria">Galeria</a></li>
+    <li><a href="#equipe">Equipe</a></li>
+    <li><a href="#resultados">Resultados</a></li>
+    <li><a href="#depoimentos">Avaliações</a></li>
+  </ul>
+  <a href="#agendamento" class="nav-cta">Agendar</a>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-lines"></div>
+  <div class="hero-accent-bar"></div>
+  <div class="hero-watermark">BARBER</div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Est. 2018 — São Paulo</div>
+
+    <h1 class="hero-title">
+      <div class="blade-wrap">
+        O Corte<div class="blade-cut"></div>
+      </div><br>
+      Que Define<br>
+      <span class="highlight">Seu</span> <span class="blue-word">Estilo</span>
+    </h1>
+
+    <p class="hero-sub">
+      Precisão, estilo e identidade em cada detalhe. No Studio João Vitor, corte de cabelo é arte — e você é a obra.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#agendamento" class="btn-primary">Agendar Agora</a>
+      <a href="#servicos" class="btn-outline">Ver Serviços</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num" id="count1">0<span>+</span></div>
+      <div class="stat-label">Clientes Atendidos</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="count2">0<span>★</span></div>
+      <div class="stat-label">Avaliação Média</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="count3">0<span>+</span></div>
+      <div class="stat-label">Anos de Experiência</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner" id="marquee">
+    <span class="marquee-item">Corte Masculino <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Barba <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Pigmentação <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Sobrancelha <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Relaxamento <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Hidratação <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Studio João Vitor <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Corte Masculino <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Barba <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Pigmentação <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Sobrancelha <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Relaxamento <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Hidratação <span class="marquee-dot">✦</span></span>
+    <span class="marquee-item">Studio João Vitor <span class="marquee-dot">✦</span></span>
+  </div>
+</div>
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="reveal">
+    <div class="section-label">O que oferecemos</div>
+    <h2 class="section-title">Serviços</h2>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <span class="service-icon">✂️</span>
+      <div class="service-name">Corte Clássico</div>
+      <div class="service-desc">Degradê, navalhado ou tesoura. Cada linha cortada com precisão cirúrgica.</div>
+      <div class="service-price">R$ 45 <small>/ sessão</small></div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🪒</span>
+      <div class="service-name">Barba Completa</div>
+      <div class="service-desc">Modelagem, alinhamento e finalização com produtos premium. Barba na régua.</div>
+      <div class="service-price">R$ 35 <small>/ sessão</small></div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">💈</span>
+      <div class="service-name">Combo Total</div>
+      <div class="service-desc">Corte + barba + sobrancelha. A experiência completa do Studio.</div>
+      <div class="service-price">R$ 70 <small>/ sessão</small></div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🖌️</span>
+      <div class="service-name">Pigmentação</div>
+      <div class="service-desc">Cobertura de falhas e uniformização da cor com técnica de pontos.</div>
+      <div class="service-price">R$ 80 <small>/ sessão</small></div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">💧</span>
+      <div class="service-name">Hidratação Capilar</div>
+      <div class="service-desc">Tratamento intensivo com produtos de alto desempenho para fios secos.</div>
+      <div class="service-price">R$ 55 <small>/ sessão</small></div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">✨</span>
+      <div class="service-name">Relaxamento</div>
+      <div class="service-desc">Alisa e disciplina fios crespos ou cacheados mantendo saúde e brilho.</div>
+      <div class="service-price">R$ 90 <small>/ sessão</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA -->
+<section id="galeria">
+  <div class="reveal">
+    <div class="section-label">Nossos Trabalhos</div>
+    <h2 class="section-title">Galeria</h2>
+  </div>
+
+  <div class="gallery-carousel owl-carousel owl-theme reveal" id="galleryOwl">
+    <!-- Cards com gradiente placeholder (sem imagens externas) -->
+    <div class="gallery-item">
+      <div style="width:100%;height:100%;background:linear-gradient(145deg,#1E1E1E,#2a2a2a);display:flex;align-items:center;justify-content:center;aspect-ratio:3/4">
+        <div style="text-align:center;">
+          <div style="font-size:3rem">✂️</div>
+          <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.3);margin-top:.8rem">Degradê Alto</div>
+        </div>
+      </div>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <div style="width:100%;height:100%;background:linear-gradient(145deg,#1A3A6B,#0d2245);display:flex;align-items:center;justify-content:center;aspect-ratio:3/4">
+        <div style="text-align:center;">
+          <div style="font-size:3rem">🪒</div>
+          <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.4);margin-top:.8rem">Barba Riscada</div>
+        </div>
+      </div>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <div style="width:100%;height:100%;background:linear-gradient(145deg,#3a0a14,#1E1E1E);display:flex;align-items:center;justify-content:center;aspect-ratio:3/4">
+        <div style="text-align:center;">
+          <div style="font-size:3rem">💈</div>
+          <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.4);margin-top:.8rem">Combo Clássico</div>
+        </div>
+      </div>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <div style="width:100%;height:100%;background:linear-gradient(145deg,#1E1E1E,#1A3A6B);display:flex;align-items:center;justify-content:center;aspect-ratio:3/4">
+        <div style="text-align:center;">
+          <div style="font-size:3rem">🖌️</div>
+          <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.4);margin-top:.8rem">Pigmentação</div>
+        </div>
+      </div>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <div style="width:100%;height:100%;background:linear-gradient(145deg,#2a2a2a,#3a0a14);display:flex;align-items:center;justify-content:center;aspect-ratio:3/4">
+        <div style="text-align:center;">
+          <div style="font-size:3rem">✨</div>
+          <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.4);margin-top:.8rem">Relaxamento</div>
+        </div>
+      </div>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <div style="width:100%;height:100%;background:linear-gradient(145deg,#1A3A6B,#2a2a2a);display:flex;align-items:center;justify-content:center;aspect-ratio:3/4">
+        <div style="text-align:center;">
+          <div style="font-size:3rem">💧</div>
+          <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,245,245,.4);margin-top:.8rem">Hidratação</div>
+        </div>
+      </div>
+      <div class="gallery-overlay"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPE -->
+<section id="equipe">
+  <div class="reveal">
+    <div class="section-label">Quem faz acontecer</div>
+    <h2 class="section-title">Nossa Equipe</h2>
+  </div>
+  <div class="team-grid">
+    <div class="team-card reveal">
+      <div class="team-photo-wrap">
+        <div style="width:100%;height:100%;background:linear-gradient(160deg,#1A3A6B 0%,#0A0A0A 100%);display:flex;align-items:center;justify-content:center;min-height:340px">
+          <div style="font-size:5rem;opacity:.25">👤</div>
+        </div>
+      </div>
+      <div class="team-info">
+        <div class="team-name">João Vitor</div>
+        <div class="team-role">Fundador & Master Barber</div>
+        <div class="team-divider"></div>
+        <div class="team-bio">Mais de 7 anos no ofício. Especialista em degradê, navalhado e pigmentação. Referência em São Paulo.</div>
+      </div>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-photo-wrap">
+        <div style="width:100%;height:100%;background:linear-gradient(160deg,#C8102E 0%,#1E1E1E 100%);display:flex;align-items:center;justify-content:center;min-height:340px">
+          <div style="font-size:5rem;opacity:.25">👤</div>
+        </div>
+      </div>
+      <div class="team-info">
+        <div class="team-name">Rodrigo Silva</div>
+        <div class="team-role">Senior Barber</div>
+        <div class="team-divider"></div>
+        <div class="team-bio">Técnico em química capilar e especialista em barba artística. 5 anos de experiência no mercado premium.</div>
+      </div>
+    </div>
+    <div class="team-card reveal">
+      <div class="team-photo-wrap">
+        <div style="width:100%;height:100%;background:linear-gradient(160deg,#2a2a2a 0%,#1A3A6B 100%);display:flex;align-items:center;justify-content:center;min-height:340px">
+          <div style="font-size:5rem;opacity:.25">👤</div>
+        </div>
+      </div>
+      <div class="team-info">
+        <div class="team-name">Lucas Mendes</div>
+        <div class="team-role">Barber & Designer</div>
+        <div class="team-divider"></div>
+        <div class="team-bio">Especializado em cortes afro e riscos artísticos. Referência em trabalhos criativo-geométricos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTADOS / CHARTS -->
+<section id="resultados">
+  <div class="reveal">
+    <div class="section-label">Dados que falam</div>
+    <h2 class="section-title">Nossos Resultados</h2>
+  </div>
+  <div class="charts-wrap reveal">
+    <div class="chart-card">
+      <div class="chart-card-title">Clientes por mês (2024)</div>
+      <canvas id="clientesChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">Distribuição de serviços</div>
+      <canvas id="servicosChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">Avaliações por nota</div>
+      <canvas id="avaliacoesChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-card-title">Crescimento de receita (%)</div>
+      <canvas id="receitaChart"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section id="depoimentos">
+  <div class="reveal">
+    <div class="section-label">O que dizem os clientes</div>
+    <h2 class="section-title">Avaliações</h2>
+  </div>
+  <div class="testimonials-carousel owl-carousel owl-theme reveal" id="testimonialsOwl">
+    <div class="testimonial-card">
+      <div class="testimonial-text">Fui pela primeira vez com um amigo e não troquei mais. O João Vitor tem um cuidado absurdo com cada detalhe, e o espaço é outro nível. Corte impecável.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">MR</div>
+        <div>
+          <div class="author-name">Marcos Rocha</div>
+          <div class="author-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-text">Melhor barbearia que já fui em SP. Ambiente top, atendimento rápido e profissional. A barba ficou exatamente como eu pedi. Voltarei sempre.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">FC</div>
+        <div>
+          <div class="author-name">Felipe Cardoso</div>
+          <div class="author-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-text">Fiz a pigmentação e me surpreendi com o resultado. Natural demais. O Lucas tem uma paciência e uma técnica impressionante. Recomendo fortemente.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">TN</div>
+        <div>
+          <div class="author-name">Tiago Nunes</div>
+          <div class="author-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-text">Cliente fiel há 3 anos. Studio João Vitor não é só barbearia, é um ritual. Você sai de lá outro homem. Ambiente, cheiro, música — tudo no ponto.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">GS</div>
+        <div>
+          <div class="author-name">Gabriel Santos</div>
+          <div class="author-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-text">Atendimento nota 10. O Rodrigo entendeu tudo que eu queria sem eu precisar explicar muito. O degradê ficou perfeito. Já indiquei para todo mundo.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">BL</div>
+        <div>
+          <div class="author-name">Bruno Lima</div>
+          <div class="author-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDAMENTO -->
+<section id="agendamento">
+  <div class="booking-grid">
+    <div class="booking-left reveal">
+      <div class="section-label">Reserva Online</div>
+      <h2 class="section-title" style="color:#fff">Agende Seu<br>Horário</h2>
+      <p class="booking-sub">Escolha o serviço, o profissional e o melhor horário para você. Confirmação imediata por WhatsApp.</p>
+      <div class="booking-info">
+        <div class="info-row"><span class="info-icon">📍</span> Rua das Palmeiras, 432 — Pinheiros, SP</div>
+        <div class="info-row"><span class="info-icon">⏰</span> Seg–Sex: 9h–20h &nbsp;|&nbsp; Sáb: 8h–18h</div>
+        <div class="info-row"><span class="info-icon">📞</span> (11) 98765-4321</div>
+        <div class="info-row"><span class="info-icon">💬</span> @studiojvbarbershop</div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="booking-form">
+        <div class="form-group">
+          <label class="form-label">Seu Nome</label>
+          <input type="text" class="form-input" placeholder="João Silva"/>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Serviço</label>
+            <select class="form-input" style="cursor:pointer">
+              <option value="">Selecione...</option>
+              <option>Corte Clássico</option>
+              <option>Barba Completa</option>
+              <option>Combo Total</option>
+              <option>Pigmentação</option>
+              <option>Hidratação</option>
+              <option>Relaxamento</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Profissional</label>
+            <select class="form-input" style="cursor:pointer">
+              <option value="">Qualquer um</option>
+              <option>João Vitor</option>
+              <option>Rodrigo Silva</option>
+              <option>Lucas Mendes</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Data</label>
+            <input type="date" class="form-input"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Horário</label>
+            <select class="form-input" style="cursor:pointer">
+              <option>09:00</option><option>09:30</option><option>10:00</option>
+              <option>10:30</option><option>11:00</option><option>14:00</option>
+              <option>14:30</option><option>15:00</option><option>16:00</option>
+              <option>17:00</option><option>18:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp</label>
+          <input type="tel" class="form-input" placeholder="(11) 9XXXX-XXXX"/>
+        </div>
+        <button class="btn-booking" id="bookBtn">Confirmar Agendamento →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Studio <span>JV</span> BarberShop</div>
+  <div class="footer-copy">© 2024 Studio João Vitor BarberShop — Todos os direitos reservados</div>
+  <div class="footer-social">
+    <a href="#" class="social-link" title="Instagram">📸</a>
+    <a href="#" class="social-link" title="WhatsApp">💬</a>
+    <a href="#" class="social-link" title="TikTok">🎵</a>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+$(function(){
+
+  /* ── NAVBAR SCROLL ── */
+  $(window).on('scroll', function(){
+    if($(this).scrollTop()>60) $('#navbar').addClass('scrolled');
+    else $('#navbar').removeClass('scrolled');
+  });
+
+  /* ── SCROLL REVEAL ── */
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add('visible');
+    });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+  /* ── COUNTER ANIMATION ── */
+  function animateCounter($el, target, duration, decimals=0){
+    let start=0, step=target/((duration/16));
+    let timer=setInterval(()=>{
+      start+=step;
+      if(start>=target){ start=target; clearInterval(timer); }
+      $el.text(decimals>0?start.toFixed(decimals):Math.floor(start));
+    },16);
+  }
+  let counted=false;
+  $(window).on('scroll',function(){
+    if(counted) return;
+    let heroBottom=$('#hero').offset().top+$('#hero').height();
+    if($(this).scrollTop()+$(window).height()>heroBottom-100){
+      counted=true;
+      animateCounter($('#count1').find('span').length?$('#count1'):$('#count1'),2400,1800);
+      // Custom for decimals
+      let $c2=$('#count2'); let v2=0; let s2=4.9/(1800/16);
+      let t2=setInterval(()=>{v2+=s2;if(v2>=4.9){v2=4.9;clearInterval(t2);} $c2.html(v2.toFixed(1)+'<span>★</span>');},16);
+      animateCounter($('#count3').find('span').length?$('#count3'):$('#count3'),7,1800);
+    }
+  });
+  // Start counters for values
+  function startCounters(){
+    let $c1=$('#count1'); let v1=0; let s1=2400/(1800/16);
+    let t1=setInterval(()=>{v1+=s1;if(v1>=2400){v1=2400;clearInterval(t1);} $c1.html(Math.floor(v1)+'<span>+</span>');},16);
+    let $c2=$('#count2'); let v2=0; let s2=4.9/(1800/16);
+    let t2=setInterval(()=>{v2+=s2;if(v2>=4.9){v2=4.9;clearInterval(t2);} $c2.html(v2.toFixed(1)+'<span>★</span>');},16);
+    let $c3=$('#count3'); let v3=0; let s3=7/(1800/16);
+    let t3=setInterval(()=>{v3+=s3;if(v3>=7){v3=7;clearInterval(t3);} $c3.html(Math.floor(v3)+'<span>+</span>');},16);
+    counted=true;
+  }
+  setTimeout(startCounters,1500);
+
+  /* ── GALLERY CAROUSEL ── */
+  $('#galleryOwl').owlCarousel({
+    loop:true, margin:8, nav:true, dots:true, autoplay:true, autoplayTimeout:3500,
+    autoplayHoverPause:true,
+    responsive:{0:{items:1},600:{items:2},900:{items:3},1200:{items:4}},
+    navText:['&#8592;','&#8594;']
+  });
+
+  /* ── TESTIMONIALS CAROUSEL ── */
+  $('#testimonialsOwl').owlCarousel({
+    loop:true, margin:16, nav:false, dots:true, autoplay:true, autoplayTimeout:4500,
+    autoplayHoverPause:true,
+    responsive:{0:{items:1},768:{items:2},1200:{items:3}}
+  });
+
+  /* ── CHARTS ── */
+  Chart.defaults.color='rgba(245,245,245,.5)';
+  Chart.defaults.borderColor='rgba(255,255,255,.07)';
+
+  // 1. Clientes por mês
+  new Chart(document.getElementById('clientesChart'),{
+    type:'bar',
+    data:{
+      labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      datasets:[{
+        label:'Clientes',
+        data:[142,158,171,185,200,219,198,225,240,252,238,270],
+        backgroundColor:'rgba(200,16,46,.7)',
+        borderColor:'rgba(200,16,46,1)',
+        borderWidth:1, borderRadius:0
+      }]
+    },
+    options:{
+      responsive:true, plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:'rgba(255,255,255,.05)'}},y:{grid:{color:'rgba(255,255,255,.05)'}}}
+    }
+  });
+
+  // 2. Distribuição serviços
+  new Chart(document.getElementById('servicosChart'),{
+    type:'doughnut',
+    data:{
+      labels:['Corte','Barba','Combo','Pigmentação','Hidratação','Relaxamento'],
+      datasets:[{
+        data:[35,25,20,8,7,5],
+        backgroundColor:['#C8102E','#1A3A6B','#F5F5F5','#2a5298','#8b0d1e','#3d5a99'],
+        borderColor:'#0A0A0A', borderWidth:3
+      }]
+    },
+    options:{
+      responsive:true, cutout:'65%',
+      plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:12}}}
+    }
+  });
+
+  // 3. Avaliações
+  new Chart(document.getElementById('avaliacoesChart'),{
+    type:'bar',
+    data:{
+      labels:['⭐','⭐⭐','⭐⭐⭐','⭐⭐⭐⭐','⭐⭐⭐⭐⭐'],
+      datasets:[{
+        label:'Qtd',
+        data:[2,5,18,65,340],
+        backgroundColor:['#444','#555','#666','#1A3A6B','#C8102E'],
+        borderWidth:0, borderRadius:0
+      }]
+    },
+    options:{
+      responsive:true,indexAxis:'y',
+      plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:'rgba(255,255,255,.05)'}},y:{grid:{display:false}}}
+    }
+  });
+
+  // 4. Crescimento receita
+  new Chart(document.getElementById('receitaChart'),{
+    type:'line',
+    data:{
+      labels:['2020','2021','2022','2023','2024'],
+      datasets:[{
+        label:'Crescimento %',
+        data:[0,12,28,47,71],
+        borderColor:'#C8102E', backgroundColor:'rgba(200,16,46,.1)',
+        pointBackgroundColor:'#C8102E', pointBorderColor:'#F5F5F5',
+        pointRadius:5, borderWidth:2, fill:true, tension:.35
+      },{
+        label:'Meta',
+        data:[0,15,30,50,80],
+        borderColor:'rgba(26,58,107,.6)', backgroundColor:'transparent',
+        pointRadius:0, borderWidth:1.5, borderDash:[6,4], tension:.35
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{boxWidth:12,padding:10}}},
+      scales:{x:{grid:{color:'rgba(255,255,255,.05)'}},y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{callback:v=>v+'%'}}}
+    }
+  });
+
+  /* ── BOOKING BUTTON ── */
+  $('#bookBtn').on('click',function(){
+    let name=$('.booking-form input[type=text]').val().trim();
+    if(!name){ alert('Por favor, preencha seu nome.'); return; }
+    $(this).text('✓ Agendado! Confirmação via WhatsApp').css('background','#166534');
+    setTimeout(()=>{ $(this).text('Confirmar Agendamento →').css('background',''); },3500);
+  });
+
+});
+</script>
+</body>
+</html>
